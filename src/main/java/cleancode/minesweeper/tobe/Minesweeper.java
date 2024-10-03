@@ -7,9 +7,9 @@ public class Minesweeper {
 
     private static final int BOARD_ROW_SIZE = 8;
     private static final int BOARD_COL_SIZE = 10;
-    private static final char BASE_CHAR_FOR_COL = 'a';
 
     private final GameBoard gameBoard = new GameBoard(BOARD_ROW_SIZE, BOARD_COL_SIZE);
+    private final BoardIndexConverter boardIndexConverter = new BoardIndexConverter();
     private final ConsoleInputHandler consoleInputHandler = new ConsoleInputHandler();
     private final ConsoleOutputHandler consoleOutputHandler = new ConsoleOutputHandler();
 
@@ -44,8 +44,8 @@ public class Minesweeper {
     }
 
     private void actOneCell(String cellInput, String userActionInput) {
-        int selectedColIndex = getSelectedColIndex(cellInput);
-        int selectedRowIndex = getSelectedRowIndex(cellInput);
+        int selectedColIndex = boardIndexConverter.getSelectedColIndex(cellInput, gameBoard.getColSize());
+        int selectedRowIndex = boardIndexConverter.getSelectedRowIndex(cellInput, gameBoard.getRowSize());
 
         if (doesUserChooseToPlantFlag(userActionInput)) {
             gameBoard.flag(selectedRowIndex, selectedColIndex);
@@ -80,16 +80,6 @@ public class Minesweeper {
         return userActionInput.equals("2");
     }
 
-    private int getSelectedRowIndex(String cellInput) {
-        String cellInputRow = cellInput.substring(1);
-        return convertRowFrom(cellInputRow);
-    }
-
-    private int getSelectedColIndex(String cellInput) {
-        char cellInputCol = cellInput.charAt(0);
-        return convertColFrom(cellInputCol);
-    }
-
     private String getUserActionInputFromUser() {
         consoleOutputHandler.printCommentForUserAction();
         return consoleInputHandler.getUserInput();
@@ -116,23 +106,5 @@ public class Minesweeper {
 
     private void changeGameStatusToWin() {
         GAME_STATUS = 1;
-    }
-
-    private int convertRowFrom(String cellInputRow) {
-        int rowIndex = Integer.parseInt(cellInputRow) - 1;
-        if (rowIndex >= BOARD_ROW_SIZE) {
-            throw new GameException("잘못된 입력입니다.");
-        }
-
-        return rowIndex;
-    }
-
-    private int convertColFrom(char cellInputCol) {
-        int colIndex = cellInputCol - BASE_CHAR_FOR_COL;
-        if (colIndex < 0) {
-            throw new GameException("잘못된 입력입니다.");
-        }
-        
-        return colIndex;
     }
 }
