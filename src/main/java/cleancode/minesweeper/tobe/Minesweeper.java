@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
-public class MinesweeperGame {
+public class Minesweeper {
 
     public static final int BOARD_ROW_SIZE = 8;
     public static final int BOARD_COL_SIZE = 10;
@@ -16,7 +16,7 @@ public class MinesweeperGame {
 
     private static int GAME_STATUS = 0; // 0: 게임 중, 1: 승리, -1: 패배
 
-    public static void main(String[] args) {
+    public void run() {
         showGameStartComments();
         initializeGame();
 
