@@ -31,6 +31,6 @@ public class CellState {
     }
 
     public boolean isFlagged() {
-        return isFlagged;
+        return this.isFlagged;
     }
 }
