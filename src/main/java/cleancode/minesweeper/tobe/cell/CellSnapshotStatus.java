@@ -1,6 +1,6 @@
 package cleancode.minesweeper.tobe.cell;
 
-public enum CellSnapshotStatus() {
+public enum CellSnapshotStatus {
 
     EMPTY("빈 셀"),
     FLAG("깃발"),
