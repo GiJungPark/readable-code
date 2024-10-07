@@ -14,35 +14,28 @@ public class Minesweeper implements GameInitializable, GameRunnable {
     private final InputHandler inputHandler;
     private final OutputHandler outputHandler;
 
-    private int GAME_STATUS = 0; // 0: 게임 중, 1: 승리, -1: 패배
+    private GameStatus gameStatus;
 
     public Minesweeper(GameConfig gameConfig) {
         gameBoard = new GameBoard(gameConfig.getGameLevel());
         this.inputHandler = gameConfig.getInputHandler();
         this.outputHandler = gameConfig.getOutputHandler();
+        gameStatus = GameStatus.IN_PROGRESS;
     }
 
     @Override
     public void initialize() {
         gameBoard.initializeGame();
+        gameStatus = GameStatus.IN_PROGRESS;
     }
 
     @Override
     public void run() {
         outputHandler.showGameStartComments();
 
-        while (true) {
+        while (gameStatus == GameStatus.IN_PROGRESS) {
             try {
                 outputHandler.showBoard(gameBoard);
-
-                if (doesUserWinTheGame()) {
-                    outputHandler.showGameWinningComment();
-                    break;
-                }
-                if (doesUserLoseTheGame()) {
-                    outputHandler.showGameLosingComment();
-                    break;
-                }
 
                 CellPosition cellPosition = getCellInputFromUser();
                 UserAction userAction = getUserActionInputFromUser();
@@ -52,6 +45,15 @@ public class Minesweeper implements GameInitializable, GameRunnable {
             } catch (Exception e) {
                 outputHandler.showSimpleMessage("프로그램에 문제가 생겼습니다.");
             }
+        }
+
+        outputHandler.showBoard(gameBoard);
+
+        if (doesUserWinTheGame()) {
+            outputHandler.showGameWinningComment();
+        }
+        if (doesUserLoseTheGame()) {
+            outputHandler.showGameLosingComment();
         }
     }
 
@@ -78,7 +80,7 @@ public class Minesweeper implements GameInitializable, GameRunnable {
     }
 
     private void changeGameStatusToLose() {
-        GAME_STATUS = -1;
+        gameStatus = GameStatus.LOSE;
     }
 
     private boolean doesUserChooseToOpenCel(UserAction userAction) {
@@ -105,11 +107,11 @@ public class Minesweeper implements GameInitializable, GameRunnable {
     }
 
     private boolean doesUserLoseTheGame() {
-        return GAME_STATUS == -1;
+        return gameStatus == GameStatus.LOSE;
     }
 
     private boolean doesUserWinTheGame() {
-        return GAME_STATUS == 1;
+        return gameStatus == GameStatus.WIN;
     }
 
     private void checkIfGameIsOver() {
@@ -119,6 +121,6 @@ public class Minesweeper implements GameInitializable, GameRunnable {
     }
 
     private void changeGameStatusToWin() {
-        GAME_STATUS = 1;
+        gameStatus = GameStatus.WIN;
     }
 }
