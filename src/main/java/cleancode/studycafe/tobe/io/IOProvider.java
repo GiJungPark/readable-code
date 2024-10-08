@@ -1,7 +1,5 @@
 package cleancode.studycafe.tobe.io;
 
-import cleancode.studycafe.tobe.io.console.ConsoleInputHandler;
-import cleancode.studycafe.tobe.io.console.ConsoleOutputHandler;
 import cleancode.studycafe.tobe.pass.StudyCafePassType;
 import cleancode.studycafe.tobe.pass.locker.StudyCafeLockerPass;
 import cleancode.studycafe.tobe.pass.seat.StudyCafeSeatPass;

@@ -1,6 +1,6 @@
 package cleancode.studycafe.tobe;
 
-import cleancode.studycafe.tobe.io.StudyCafeFileHandler;
+import cleancode.studycafe.tobe.io.file.PassCsvRepository;
 import cleancode.studycafe.tobe.io.console.ConsoleIOProvider;
 import cleancode.studycafe.tobe.io.console.ConsoleInputHandler;
 import cleancode.studycafe.tobe.io.console.ConsoleOutputHandler;
@@ -12,7 +12,7 @@ public class StudyCafeApplication {
             new ConsoleIOProvider(
                 new ConsoleInputHandler(),
                 new ConsoleOutputHandler()),
-            new StudyCafeFileHandler()
+            new PassCsvRepository()
         );
         studyCafePassMachine.run();
     }

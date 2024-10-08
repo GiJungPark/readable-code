@@ -2,7 +2,7 @@ package cleancode.studycafe.tobe;
 
 import cleancode.studycafe.tobe.exception.AppException;
 import cleancode.studycafe.tobe.io.IOProvider;
-import cleancode.studycafe.tobe.io.StudyCafeFileHandler;
+import cleancode.studycafe.tobe.io.PassRepository;
 import cleancode.studycafe.tobe.pass.*;
 import cleancode.studycafe.tobe.pass.locker.StudyCafeLockerPass;
 import cleancode.studycafe.tobe.pass.locker.StudyCafeLockerPasses;
@@ -15,11 +15,11 @@ import java.util.Optional;
 public class StudyCafePassMachine {
 
     private final IOProvider ioProvider;
-    private final StudyCafeFileHandler studyCafeFileHandler;
+    private final PassRepository passRepository;
 
-    public StudyCafePassMachine(IOProvider ioProvider, StudyCafeFileHandler studyCafeFileHandler) {
+    public StudyCafePassMachine(IOProvider ioProvider, PassRepository passRepository) {
         this.ioProvider = ioProvider;
-        this.studyCafeFileHandler = studyCafeFileHandler;
+        this.passRepository = passRepository;
     }
 
     public void run() {
@@ -68,12 +68,12 @@ public class StudyCafePassMachine {
     }
 
     private List<StudyCafeSeatPass> getMatchingPasses(StudyCafePassType selectedPassType) {
-        StudyCafeSeatPasses allPasses = studyCafeFileHandler.readStudyCafePasses();
+        StudyCafeSeatPasses allPasses = passRepository.readStudyCafePasses();
         return allPasses.getMatchingPasses(selectedPassType);
     }
 
     private Optional<StudyCafeLockerPass> getStudyCafeLockerPassCandidate(StudyCafeSeatPass selectedPass) {
-        StudyCafeLockerPasses lockerPasses = studyCafeFileHandler.readLockerPasses();
+        StudyCafeLockerPasses lockerPasses = passRepository.readLockerPasses();
         return lockerPasses.getLockerPassCandidate(selectedPass);
     }
 
