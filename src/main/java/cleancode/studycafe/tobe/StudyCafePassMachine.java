@@ -9,53 +9,24 @@ import cleancode.studycafe.tobe.model.StudyCafePass;
 import cleancode.studycafe.tobe.model.StudyCafePassType;
 
 import java.util.List;
+import java.util.Optional;
 
 public class StudyCafePassMachine {
 
     private final InputHandler inputHandler = new InputHandler();
     private final OutputHandler outputHandler = new OutputHandler();
+    private final StudyCafeFileHandler studyCafeFileHandler = new StudyCafeFileHandler();
 
     public void run() {
+
         try {
-            /* 시작 메세지 출력 */
-            outputHandler.showWelcomeMessage();
-            outputHandler.showAnnouncement();
+            showStartMessage();
 
-            /* 사용자 이용권 선택 */
-            outputHandler.askPassTypeSelection();
-            StudyCafePassType studyCafePassType = inputHandler.getPassTypeSelectingUserAction();
+            StudyCafePass selectedPass = selectPassFromUser();
 
-            /* 모든 이용권 불러오기 */
-            StudyCafeFileHandler studyCafeFileHandler = new StudyCafeFileHandler();
-            List<StudyCafePass> allPasses = studyCafeFileHandler.readStudyCafePasses();
+            StudyCafeLockerPass lockerPassAvailability = selectLockerPassFromUser(selectedPass);
 
-            /* 이용권에 맞는 목록 불러오기 */
-            List<StudyCafePass> selectPasses = allPasses.stream()
-                .filter(studyCafePass -> studyCafePass.getPassType() == studyCafePassType)
-                .toList();
-
-            /* 이용권 목록에서 선택 */
-            outputHandler.showPassListForSelection(selectPasses);
-            StudyCafePass selectedPass = inputHandler.getSelectPass(selectPasses);
-
-            /* 사물함을 이용할 수 있는 이용권인지 가져옴 */
-            StudyCafeLockerPass lockerPass = getStudyCafeLockerPass(studyCafeFileHandler, selectedPass);
-
-            /* 사물함을 사용할 수 있는 경우, 사용 여부 확인*/
-            boolean lockerSelection = false;
-            if (lockerPass != null) {
-                outputHandler.askLockerPass(lockerPass);
-                lockerSelection = inputHandler.getLockerSelection();
-            }
-
-            /* 사물함 사용을 희망하는 경우, 이용권 결제 금액 출력*/
-            if (lockerSelection) {
-                outputHandler.showPassOrderSummary(selectedPass, lockerPass);
-            }
-            /* 사물함을 사용할 수 없거나, 사용하지 않는 경우, 이용권 결제 금액 출력 */
-            else {
-                outputHandler.showPassOrderSummary(selectedPass, null);
-            }
+            showTotalPriceMessage(selectedPass, lockerPassAvailability);
 
         } catch (AppException e) {
             outputHandler.showSimpleMessage(e.getMessage());
@@ -64,7 +35,52 @@ public class StudyCafePassMachine {
         }
     }
 
-    private StudyCafeLockerPass getStudyCafeLockerPass(StudyCafeFileHandler studyCafeFileHandler, StudyCafePass selectedPass) {
+    private void showStartMessage() {
+        outputHandler.showWelcomeMessage();
+        outputHandler.showAnnouncement();
+    }
+
+    private StudyCafePass selectPassFromUser() {
+        StudyCafePassType selectedPassType = selectPassTypeFromUser();
+
+        // TODO: 모든 이용권을 가져오는 것은 시작시에 이뤄지야 하는 것이 아닌가? vs 사용 시점에서 불러와야 하는 것이 아닌가?
+        List<StudyCafePass> allPasses = studyCafeFileHandler.readStudyCafePasses();
+
+        List<StudyCafePass> matchingPasses = getMatchingPasses(allPasses, selectedPassType);
+
+        StudyCafePass selectedPass = selectPassFromUserAbout(matchingPasses);
+        return selectedPass;
+    }
+
+    private StudyCafePassType selectPassTypeFromUser() {
+        outputHandler.askPassTypeSelection();
+        return inputHandler.getPassTypeSelectingUserAction();
+    }
+
+    private static List<StudyCafePass> getMatchingPasses(List<StudyCafePass> allPasses, StudyCafePassType selectedPassType) {
+        return allPasses.stream()
+            .filter(studyCafePass -> studyCafePass.getPassType() == selectedPassType)
+            .toList();
+    }
+
+    private StudyCafePass selectPassFromUserAbout(List<StudyCafePass> matchingPasses) {
+        outputHandler.showPassListForSelection(matchingPasses);
+        return inputHandler.getSelectPass(matchingPasses);
+    }
+
+    private StudyCafeLockerPass selectLockerPassFromUser(StudyCafePass selectedPass) {
+        Optional<StudyCafeLockerPass> lockerPass = getStudyCafeLockerPass(selectedPass);
+        if (lockerPass.isPresent()) {
+            if (selectLockerPassFromUser(lockerPass.get())) {
+                return lockerPass.get();
+            }
+        }
+        // TODO: null을 반환하는 행위는 좋지 않다.
+        //  그렇다고 Optional로 반환하게 된다면, 해당 메서드와 이를 사용하는 곳 둘 다 Optional을 처리해야 한다.
+        return null;
+    }
+
+    private Optional<StudyCafeLockerPass> getStudyCafeLockerPass(StudyCafePass selectedPass) {
         List<StudyCafeLockerPass> lockerPasses = studyCafeFileHandler.readLockerPasses();
 
         return lockerPasses.stream()
@@ -72,8 +88,19 @@ public class StudyCafePassMachine {
                 option.getPassType() == selectedPass.getPassType()
                     && option.getDuration() == selectedPass.getDuration()
             )
-            .findFirst()
-            .orElse(null);
+            .findFirst();
+    }
+
+    private boolean selectLockerPassFromUser(StudyCafeLockerPass lockerPass) {
+        outputHandler.askLockerPass(lockerPass);
+        if (inputHandler.getLockerSelection()) {
+            return true;
+        }
+        return false;
+    }
+
+    private void showTotalPriceMessage(StudyCafePass selectedPass, StudyCafeLockerPass lockerPassAvailability) {
+        outputHandler.showPassOrderSummary(selectedPass, lockerPassAvailability);
     }
 
 }
