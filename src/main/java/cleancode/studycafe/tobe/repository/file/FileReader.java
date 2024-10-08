@@ -1,4 +1,4 @@
-package cleancode.studycafe.tobe.io.file;
+package cleancode.studycafe.tobe.repository.file;
 
 
 import java.io.IOException;

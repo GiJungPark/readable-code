@@ -1,4 +1,4 @@
-package cleancode.studycafe.tobe.io.console;
+package cleancode.studycafe.tobe.presentation.console;
 
 import cleancode.studycafe.tobe.pass.locker.StudyCafeLockerPass;
 import cleancode.studycafe.tobe.pass.StudyCafePass;

@@ -1,8 +1,8 @@
 package cleancode.studycafe.tobe;
 
 import cleancode.studycafe.tobe.exception.AppException;
-import cleancode.studycafe.tobe.io.IOProvider;
-import cleancode.studycafe.tobe.io.PassRepository;
+import cleancode.studycafe.tobe.presentation.IOProvider;
+import cleancode.studycafe.tobe.repository.PassRepository;
 import cleancode.studycafe.tobe.pass.*;
 import cleancode.studycafe.tobe.pass.locker.StudyCafeLockerPass;
 import cleancode.studycafe.tobe.pass.locker.StudyCafeLockerPasses;

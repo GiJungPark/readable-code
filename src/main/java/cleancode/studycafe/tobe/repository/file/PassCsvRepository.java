@@ -1,11 +1,11 @@
-package cleancode.studycafe.tobe.io.file;
+package cleancode.studycafe.tobe.repository.file;
 
-import cleancode.studycafe.tobe.io.PassRepository;
 import cleancode.studycafe.tobe.pass.*;
 import cleancode.studycafe.tobe.pass.locker.StudyCafeLockerPass;
 import cleancode.studycafe.tobe.pass.locker.StudyCafeLockerPasses;
 import cleancode.studycafe.tobe.pass.seat.StudyCafeSeatPass;
 import cleancode.studycafe.tobe.pass.seat.StudyCafeSeatPasses;
+import cleancode.studycafe.tobe.repository.PassRepository;
 
 import java.util.ArrayList;
 import java.util.List;

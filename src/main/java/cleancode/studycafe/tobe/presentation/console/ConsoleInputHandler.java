@@ -1,4 +1,4 @@
-package cleancode.studycafe.tobe.io.console;
+package cleancode.studycafe.tobe.presentation.console;
 
 import cleancode.studycafe.tobe.exception.InputException;
 import cleancode.studycafe.tobe.pass.seat.StudyCafeSeatPass;
