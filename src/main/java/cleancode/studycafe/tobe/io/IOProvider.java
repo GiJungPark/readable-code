@@ -35,12 +35,16 @@ public class IOProvider {
         return inputHandler.getLockerSelection();
     }
 
-    public void showSeatAndLockerPassOrderSummary(StudyCafeSeatPass selectedPass, StudyCafeLockerPass lockerPass) {
-        outputHandler.showPassOrderSummary(selectedPass, lockerPass);
+    public void showSeatAndLockerPassUsageDetails(StudyCafeSeatPass selectedPass, StudyCafeLockerPass lockerPass) {
+        outputHandler.showPassUsageDetails(selectedPass, lockerPass);
     }
 
-    public void showSeatPassOrderSummary(StudyCafeSeatPass selectedPass) {
-        outputHandler.showPassOrderSummary(selectedPass);
+    public void showSeatPassUsageDetails(StudyCafeSeatPass selectedPass) {
+        outputHandler.showPassUsageDetails(selectedPass);
+    }
+
+    public void showPassOrderSummary(int totalPrice, int discountPrice) {
+        outputHandler.showPssOrderSummary(totalPrice, discountPrice);
     }
 
     public void showExceptionMessage(String message) {

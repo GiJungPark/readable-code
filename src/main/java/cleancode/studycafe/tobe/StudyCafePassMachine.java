@@ -26,11 +26,13 @@ public class StudyCafePassMachine {
 
             StudyCafeSeatPass selectedPass = selectPassFromUser();
             Optional<StudyCafeLockerPass> optionalLockerPass = selectLockerPass(selectedPass);
-
             optionalLockerPass.ifPresentOrElse(
-                lockerPass -> ioProvider.showSeatAndLockerPassOrderSummary(selectedPass, lockerPass),
-                () -> ioProvider.showSeatPassOrderSummary(selectedPass)
+                lockerPass -> ioProvider.showSeatAndLockerPassUsageDetails(selectedPass, lockerPass),
+                () -> ioProvider.showSeatPassUsageDetails(selectedPass)
             );
+
+            OrderService orderService = OrderService.of(selectedPass, optionalLockerPass.orElse(null));
+            ioProvider.showPassOrderSummary(orderService.getTotalPrice(), orderService.getDiscountPrice());
         } catch (AppException e) {
             ioProvider.showExceptionMessage(e.getMessage());
         } catch (Exception e) {
