@@ -23,7 +23,7 @@ public class StudyCafePassMachine {
             showStartMessage();
 
             StudyCafePass selectedPass = selectPassFromUser();
-            Optional<StudyCafeLockerPass> optionalLockerPass = getStudyCafeLockerPass(selectedPass);
+            Optional<StudyCafeLockerPass> optionalLockerPass = selectLockerPass(selectedPass);
 
             optionalLockerPass.ifPresentOrElse(
                 lockerPass -> outputHandler.showPassOrderSummary(selectedPass, lockerPass),
@@ -34,6 +34,24 @@ public class StudyCafePassMachine {
         } catch (Exception e) {
             outputHandler.showSimpleMessage("알 수 없는 오류가 발생했습니다.");
         }
+    }
+
+    private Optional<StudyCafeLockerPass> selectLockerPass(StudyCafePass selectedPass) {
+        if (selectedPass.doesNotFixedType()) {
+            return Optional.empty();
+        }
+
+        Optional<StudyCafeLockerPass> lockerPassCandidate = getStudyCafeLockerPassCandidate(selectedPass);
+        if (lockerPassCandidate.isPresent()) {
+            outputHandler.askLockerPass(lockerPassCandidate.get());
+            boolean isLockerSelected = inputHandler.getLockerSelection();
+
+            if (isLockerSelected) {
+                return Optional.of(lockerPassCandidate.get());
+            }
+        }
+
+        return Optional.empty();
     }
 
     private void showStartMessage() {
@@ -60,7 +78,7 @@ public class StudyCafePassMachine {
 
     private static List<StudyCafePass> getMatchingPasses(List<StudyCafePass> allPasses, StudyCafePassType selectedPassType) {
         return allPasses.stream()
-            .filter(studyCafePass -> studyCafePass.getPassType() == selectedPassType)
+            .filter(studyCafePass -> studyCafePass.isSameType(selectedPassType))
             .toList();
     }
 
@@ -69,14 +87,11 @@ public class StudyCafePassMachine {
         return inputHandler.getSelectPass(matchingPasses);
     }
 
-    private Optional<StudyCafeLockerPass> getStudyCafeLockerPass(StudyCafePass selectedPass) {
+    private Optional<StudyCafeLockerPass> getStudyCafeLockerPassCandidate(StudyCafePass selectedPass) {
         List<StudyCafeLockerPass> lockerPasses = studyCafeFileHandler.readLockerPasses();
 
         return lockerPasses.stream()
-            .filter(option ->
-                option.getPassType() == selectedPass.getPassType()
-                    && option.getDuration() == selectedPass.getDuration()
-            )
+            .filter(selectedPass::isSameDurationType)
             .findFirst();
     }
 

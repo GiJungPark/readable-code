@@ -1,10 +1,14 @@
 package cleancode.studycafe.tobe.model;
 
+import java.util.Set;
+
 public enum StudyCafePassType {
 
     HOURLY("시간 단위 이용권"),
     WEEKLY("주 단위 이용권"),
     FIXED("1인 고정석");
+
+    public static final Set<StudyCafePassType> LOCKER_TYPES = Set.of(FIXED);
 
     private final String description;
 
@@ -12,4 +16,7 @@ public enum StudyCafePassType {
         this.description = description;
     }
 
+    boolean isLockerType() {
+        return LOCKER_TYPES.contains(this);
+    }
 }
