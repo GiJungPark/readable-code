@@ -24,20 +24,16 @@ public class StudyCafeLockerPass {
         return this.duration == duration;
     }
 
+    public StudyCafePassType getType() {
+        return passType;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
     public int getPrice() {
         return price;
     }
 
-    public String display() {
-        if (passType.isHourlyType()) {
-            return String.format("%s시간권 - %d원", duration, price);
-        }
-        if (passType.isWeeklyType()) {
-            return String.format("%s주권 - %d원", duration, price);
-        }
-        if (passType.isFixedType()) {
-            return String.format("%s주권 - %d원", duration, price);
-        }
-        return "";
-    }
 }
