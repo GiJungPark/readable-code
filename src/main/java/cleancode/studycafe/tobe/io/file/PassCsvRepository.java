@@ -12,13 +12,15 @@ import java.util.List;
 
 public class PassCsvRepository implements PassRepository {
 
-    private static final String SEAT_PASS_CSV_PATH = "src/main/resources/cleancode/studycafe/pass-list.csv";
-    private static final String LOCKER_PASS_CSV_PATH = "src/main/resources/cleancode/studycafe/locker.csv";
+    private static final String PASS_CSV_ROOT_PATH = "src/main/resources/cleancode/studycafe/";
+    private static final String SEAT_PASS_CSV_FILE = "pass-list.csv";
+    private static final String LOCKER_PASS_CSV_FILE = "locker.csv";
     private static final String CSV_SEPARATOR = ",";
 
     @Override
     public StudyCafeSeatPasses readStudyCafePasses() {
-        List<String> lines = FileReader.readFrom(SEAT_PASS_CSV_PATH);
+        List<String> lines = FileReader.readFrom(PASS_CSV_ROOT_PATH + SEAT_PASS_CSV_FILE);
+
         List<StudyCafeSeatPass> studyCafeSeatPasses = new ArrayList<>();
         for (String line : lines) {
             String[] values = line.split(CSV_SEPARATOR);
@@ -36,7 +38,8 @@ public class PassCsvRepository implements PassRepository {
 
     @Override
     public StudyCafeLockerPasses readLockerPasses() {
-        List<String> lines = FileReader.readFrom(LOCKER_PASS_CSV_PATH);
+        List<String> lines = FileReader.readFrom(PASS_CSV_ROOT_PATH + LOCKER_PASS_CSV_FILE);
+
         List<StudyCafeLockerPass> lockerPasses = new ArrayList<>();
         for (String line : lines) {
             String[] values = line.split(CSV_SEPARATOR);
