@@ -4,9 +4,7 @@ import cleancode.studycafe.tobe.exception.AppException;
 import cleancode.studycafe.tobe.io.InputHandler;
 import cleancode.studycafe.tobe.io.OutputHandler;
 import cleancode.studycafe.tobe.io.StudyCafeFileHandler;
-import cleancode.studycafe.tobe.model.StudyCafeLockerPass;
-import cleancode.studycafe.tobe.model.StudyCafePass;
-import cleancode.studycafe.tobe.model.StudyCafePassType;
+import cleancode.studycafe.tobe.model.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -62,10 +60,7 @@ public class StudyCafePassMachine {
     private StudyCafePass selectPassFromUser() {
         StudyCafePassType selectedPassType = selectPassTypeFromUser();
 
-        // TODO: 모든 이용권을 가져오는 것은 시작시에 이뤄지야 하는 것이 아닌가? vs 사용 시점에서 불러와야 하는 것이 아닌가?
-        List<StudyCafePass> allPasses = studyCafeFileHandler.readStudyCafePasses();
-
-        List<StudyCafePass> matchingPasses = getMatchingPasses(allPasses, selectedPassType);
+        List<StudyCafePass> matchingPasses = getMatchingPasses(selectedPassType);
 
         StudyCafePass selectedPass = selectPassFromUserAbout(matchingPasses);
         return selectedPass;
@@ -76,10 +71,9 @@ public class StudyCafePassMachine {
         return inputHandler.getPassTypeSelectingUserAction();
     }
 
-    private static List<StudyCafePass> getMatchingPasses(List<StudyCafePass> allPasses, StudyCafePassType selectedPassType) {
-        return allPasses.stream()
-            .filter(studyCafePass -> studyCafePass.isSameType(selectedPassType))
-            .toList();
+    private List<StudyCafePass> getMatchingPasses(StudyCafePassType selectedPassType) {
+        StudyCafePasses allPasses = studyCafeFileHandler.readStudyCafePasses();
+        return allPasses.getMatchingPasses(selectedPassType);
     }
 
     private StudyCafePass selectPassFromUserAbout(List<StudyCafePass> matchingPasses) {
@@ -88,11 +82,8 @@ public class StudyCafePassMachine {
     }
 
     private Optional<StudyCafeLockerPass> getStudyCafeLockerPassCandidate(StudyCafePass selectedPass) {
-        List<StudyCafeLockerPass> lockerPasses = studyCafeFileHandler.readLockerPasses();
-
-        return lockerPasses.stream()
-            .filter(selectedPass::isSameDurationType)
-            .findFirst();
+        StudyCafeLockerPasses lockerPasses = studyCafeFileHandler.readLockerPasses();
+        return lockerPasses.getLockerPassCandidate(selectedPass);
     }
 
 }
