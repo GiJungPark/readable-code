@@ -23,11 +23,12 @@ public class StudyCafePassMachine {
             showStartMessage();
 
             StudyCafePass selectedPass = selectPassFromUser();
+            Optional<StudyCafeLockerPass> optionalLockerPass = getStudyCafeLockerPass(selectedPass);
 
-            StudyCafeLockerPass lockerPassAvailability = selectLockerPassFromUser(selectedPass);
-
-            showTotalPriceMessage(selectedPass, lockerPassAvailability);
-
+            optionalLockerPass.ifPresentOrElse(
+                lockerPass -> outputHandler.showPassOrderSummary(selectedPass, lockerPass),
+                () -> outputHandler.showPassOrderSummary(selectedPass)
+            );
         } catch (AppException e) {
             outputHandler.showSimpleMessage(e.getMessage());
         } catch (Exception e) {
@@ -68,18 +69,6 @@ public class StudyCafePassMachine {
         return inputHandler.getSelectPass(matchingPasses);
     }
 
-    private StudyCafeLockerPass selectLockerPassFromUser(StudyCafePass selectedPass) {
-        Optional<StudyCafeLockerPass> lockerPass = getStudyCafeLockerPass(selectedPass);
-        if (lockerPass.isPresent()) {
-            if (selectLockerPassFromUser(lockerPass.get())) {
-                return lockerPass.get();
-            }
-        }
-        // TODO: null을 반환하는 행위는 좋지 않다.
-        //  그렇다고 Optional로 반환하게 된다면, 해당 메서드와 이를 사용하는 곳 둘 다 Optional을 처리해야 한다.
-        return null;
-    }
-
     private Optional<StudyCafeLockerPass> getStudyCafeLockerPass(StudyCafePass selectedPass) {
         List<StudyCafeLockerPass> lockerPasses = studyCafeFileHandler.readLockerPasses();
 
@@ -89,18 +78,6 @@ public class StudyCafePassMachine {
                     && option.getDuration() == selectedPass.getDuration()
             )
             .findFirst();
-    }
-
-    private boolean selectLockerPassFromUser(StudyCafeLockerPass lockerPass) {
-        outputHandler.askLockerPass(lockerPass);
-        if (inputHandler.getLockerSelection()) {
-            return true;
-        }
-        return false;
-    }
-
-    private void showTotalPriceMessage(StudyCafePass selectedPass, StudyCafeLockerPass lockerPassAvailability) {
-        outputHandler.showPassOrderSummary(selectedPass, lockerPassAvailability);
     }
 
 }
