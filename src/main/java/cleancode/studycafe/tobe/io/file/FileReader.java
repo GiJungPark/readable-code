@@ -1,6 +1,5 @@
 package cleancode.studycafe.tobe.io.file;
 
-import cleancode.studycafe.tobe.exception.FileReaderException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,7 +11,7 @@ public class FileReader {
         try {
             return Files.readAllLines(Paths.get(path));
         } catch (IOException e) {
-            throw new FileReaderException("파일을 읽는데 실패했습니다.", e);
+            throw new RuntimeException("파일을 읽는데 실패했습니다.", e);
         }
     }
 }
