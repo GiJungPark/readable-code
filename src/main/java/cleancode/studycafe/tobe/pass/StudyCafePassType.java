@@ -1,4 +1,4 @@
-package cleancode.studycafe.tobe.model;
+package cleancode.studycafe.tobe.pass;
 
 import java.util.Set;
 
@@ -16,7 +16,7 @@ public enum StudyCafePassType {
         this.description = description;
     }
 
-    boolean isLockerType() {
+    public boolean isLockerType() {
         return LOCKER_TYPES.contains(this);
     }
 

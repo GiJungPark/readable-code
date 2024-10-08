@@ -1,6 +1,9 @@
-package cleancode.studycafe.tobe.model;
+package cleancode.studycafe.tobe.pass.locker;
 
-public class StudyCafeLockerPass {
+import cleancode.studycafe.tobe.pass.StudyCafePass;
+import cleancode.studycafe.tobe.pass.StudyCafePassType;
+
+public class StudyCafeLockerPass implements StudyCafePass {
 
     private final StudyCafePassType passType;
     private final int duration;
@@ -24,14 +27,17 @@ public class StudyCafeLockerPass {
         return this.duration == duration;
     }
 
+    @Override
     public StudyCafePassType getType() {
         return passType;
     }
 
+    @Override
     public int getDuration() {
         return duration;
     }
 
+    @Override
     public int getPrice() {
         return price;
     }

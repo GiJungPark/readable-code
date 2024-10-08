@@ -1,6 +1,10 @@
 package cleancode.studycafe.tobe.io;
 
-import cleancode.studycafe.tobe.model.*;
+import cleancode.studycafe.tobe.pass.*;
+import cleancode.studycafe.tobe.pass.locker.StudyCafeLockerPass;
+import cleancode.studycafe.tobe.pass.locker.StudyCafeLockerPasses;
+import cleancode.studycafe.tobe.pass.seat.StudyCafeSeatPass;
+import cleancode.studycafe.tobe.pass.seat.StudyCafeSeatPasses;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -11,13 +15,13 @@ import java.util.List;
 public class StudyCafeFileHandler {
 
     private static final String SEAT_PASS_CSV_PATH = "src/main/resources/cleancode/studycafe/pass-list.csv";
-    private static final String LOCKER_PASS_CSV_PATH = "src/main/resources/cleancode/studycafe/locker-list.csv";
+    private static final String LOCKER_PASS_CSV_PATH = "src/main/resources/cleancode/studycafe/locker.csv";
     private static final String CSV_SEPARATOR = ",";
 
-    public StudyCafePasses readStudyCafePasses() {
+    public StudyCafeSeatPasses readStudyCafePasses() {
         try {
             List<String> lines = Files.readAllLines(Paths.get(SEAT_PASS_CSV_PATH));
-            List<StudyCafePass> studyCafePasses = new ArrayList<>();
+            List<StudyCafeSeatPass> studyCafeSeatPasses = new ArrayList<>();
             for (String line : lines) {
                 String[] values = line.split(CSV_SEPARATOR);
                 StudyCafePassType studyCafePassType = StudyCafePassType.valueOf(values[0]);
@@ -25,11 +29,11 @@ public class StudyCafeFileHandler {
                 int price = Integer.parseInt(values[2]);
                 double discountRate = Double.parseDouble(values[3]);
 
-                StudyCafePass studyCafePass = StudyCafePass.of(studyCafePassType, duration, price, discountRate);
-                studyCafePasses.add(studyCafePass);
+                StudyCafeSeatPass studyCafeSeatPass = StudyCafeSeatPass.of(studyCafePassType, duration, price, discountRate);
+                studyCafeSeatPasses.add(studyCafeSeatPass);
             }
 
-            return StudyCafePasses.of(studyCafePasses);
+            return StudyCafeSeatPasses.of(studyCafeSeatPasses);
         } catch (IOException e) {
             throw new RuntimeException("파일을 읽는데 실패했습니다.", e);
         }

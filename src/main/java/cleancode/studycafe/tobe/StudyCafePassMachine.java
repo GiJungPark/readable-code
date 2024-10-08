@@ -4,7 +4,11 @@ import cleancode.studycafe.tobe.exception.AppException;
 import cleancode.studycafe.tobe.io.InputHandler;
 import cleancode.studycafe.tobe.io.OutputHandler;
 import cleancode.studycafe.tobe.io.StudyCafeFileHandler;
-import cleancode.studycafe.tobe.model.*;
+import cleancode.studycafe.tobe.pass.*;
+import cleancode.studycafe.tobe.pass.locker.StudyCafeLockerPass;
+import cleancode.studycafe.tobe.pass.locker.StudyCafeLockerPasses;
+import cleancode.studycafe.tobe.pass.seat.StudyCafeSeatPass;
+import cleancode.studycafe.tobe.pass.seat.StudyCafeSeatPasses;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +24,7 @@ public class StudyCafePassMachine {
         try {
             showStartMessage();
 
-            StudyCafePass selectedPass = selectPassFromUser();
+            StudyCafeSeatPass selectedPass = selectPassFromUser();
             Optional<StudyCafeLockerPass> optionalLockerPass = selectLockerPass(selectedPass);
 
             optionalLockerPass.ifPresentOrElse(
@@ -34,7 +38,7 @@ public class StudyCafePassMachine {
         }
     }
 
-    private Optional<StudyCafeLockerPass> selectLockerPass(StudyCafePass selectedPass) {
+    private Optional<StudyCafeLockerPass> selectLockerPass(StudyCafeSeatPass selectedPass) {
         if (selectedPass.doesNotFixedType()) {
             return Optional.empty();
         }
@@ -57,12 +61,12 @@ public class StudyCafePassMachine {
         outputHandler.showAnnouncement();
     }
 
-    private StudyCafePass selectPassFromUser() {
+    private StudyCafeSeatPass selectPassFromUser() {
         StudyCafePassType selectedPassType = selectPassTypeFromUser();
 
-        List<StudyCafePass> matchingPasses = getMatchingPasses(selectedPassType);
+        List<StudyCafeSeatPass> matchingPasses = getMatchingPasses(selectedPassType);
 
-        StudyCafePass selectedPass = selectPassFromUserAbout(matchingPasses);
+        StudyCafeSeatPass selectedPass = selectPassFromUserAbout(matchingPasses);
         return selectedPass;
     }
 
@@ -71,17 +75,17 @@ public class StudyCafePassMachine {
         return inputHandler.getPassTypeSelectingUserAction();
     }
 
-    private List<StudyCafePass> getMatchingPasses(StudyCafePassType selectedPassType) {
-        StudyCafePasses allPasses = studyCafeFileHandler.readStudyCafePasses();
+    private List<StudyCafeSeatPass> getMatchingPasses(StudyCafePassType selectedPassType) {
+        StudyCafeSeatPasses allPasses = studyCafeFileHandler.readStudyCafePasses();
         return allPasses.getMatchingPasses(selectedPassType);
     }
 
-    private StudyCafePass selectPassFromUserAbout(List<StudyCafePass> matchingPasses) {
+    private StudyCafeSeatPass selectPassFromUserAbout(List<StudyCafeSeatPass> matchingPasses) {
         outputHandler.showPassListForSelection(matchingPasses);
         return inputHandler.getSelectPass(matchingPasses);
     }
 
-    private Optional<StudyCafeLockerPass> getStudyCafeLockerPassCandidate(StudyCafePass selectedPass) {
+    private Optional<StudyCafeLockerPass> getStudyCafeLockerPassCandidate(StudyCafeSeatPass selectedPass) {
         StudyCafeLockerPasses lockerPasses = studyCafeFileHandler.readLockerPasses();
         return lockerPasses.getLockerPassCandidate(selectedPass);
     }

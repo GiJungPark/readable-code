@@ -1,21 +1,25 @@
-package cleancode.studycafe.tobe.model;
+package cleancode.studycafe.tobe.pass.seat;
 
-public class StudyCafePass {
+import cleancode.studycafe.tobe.pass.StudyCafePass;
+import cleancode.studycafe.tobe.pass.StudyCafePassType;
+import cleancode.studycafe.tobe.pass.locker.StudyCafeLockerPass;
+
+public class StudyCafeSeatPass implements StudyCafePass {
 
     private final StudyCafePassType passType;
     private final int duration;
     private final int price;
     private final double discountRate;
 
-    private StudyCafePass(StudyCafePassType passType, int duration, int price, double discountRate) {
+    private StudyCafeSeatPass(StudyCafePassType passType, int duration, int price, double discountRate) {
         this.passType = passType;
         this.duration = duration;
         this.price = price;
         this.discountRate = discountRate;
     }
 
-    public static StudyCafePass of(StudyCafePassType passType, int duration, int price, double discountRate) {
-        return new StudyCafePass(passType, duration, price, discountRate);
+    public static StudyCafeSeatPass of(StudyCafePassType passType, int duration, int price, double discountRate) {
+        return new StudyCafeSeatPass(passType, duration, price, discountRate);
     }
 
     public boolean isSameType(StudyCafePassType passType) {
@@ -34,14 +38,17 @@ public class StudyCafePass {
         return this.passType.isLockerType();
     }
 
+    @Override
     public StudyCafePassType getType() {
         return this.passType;
     }
 
+    @Override
     public int getDuration() {
         return this.duration;
     }
 
+    @Override
     public int getPrice() {
         return price;
     }
