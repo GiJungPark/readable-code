@@ -10,12 +10,16 @@ import java.util.List;
 
 public class StudyCafeFileHandler {
 
+    private static final String SEAT_PASS_CSV_PATH = "src/main/resources/cleancode/studycafe/pass-list.csv";
+    private static final String LOCKER_PASS_CSV_PATH = "src/main/resources/cleancode/studycafe/locker-list.csv";
+    private static final String CSV_SEPARATOR = ",";
+
     public StudyCafePasses readStudyCafePasses() {
         try {
-            List<String> lines = Files.readAllLines(Paths.get("src/main/resources/cleancode/studycafe/pass-list.csv"));
+            List<String> lines = Files.readAllLines(Paths.get(SEAT_PASS_CSV_PATH));
             List<StudyCafePass> studyCafePasses = new ArrayList<>();
             for (String line : lines) {
-                String[] values = line.split(",");
+                String[] values = line.split(CSV_SEPARATOR);
                 StudyCafePassType studyCafePassType = StudyCafePassType.valueOf(values[0]);
                 int duration = Integer.parseInt(values[1]);
                 int price = Integer.parseInt(values[2]);
@@ -33,10 +37,10 @@ public class StudyCafeFileHandler {
 
     public StudyCafeLockerPasses readLockerPasses() {
         try {
-            List<String> lines = Files.readAllLines(Paths.get("src/main/resources/cleancode/studycafe/locker.csv"));
+            List<String> lines = Files.readAllLines(Paths.get(LOCKER_PASS_CSV_PATH));
             List<StudyCafeLockerPass> lockerPasses = new ArrayList<>();
             for (String line : lines) {
-                String[] values = line.split(",");
+                String[] values = line.split(CSV_SEPARATOR);
                 StudyCafePassType studyCafePassType = StudyCafePassType.valueOf(values[0]);
                 int duration = Integer.parseInt(values[1]);
                 int price = Integer.parseInt(values[2]);
