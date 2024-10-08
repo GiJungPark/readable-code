@@ -1,6 +1,6 @@
 package cleancode.studycafe.tobe.io;
 
-import cleancode.studycafe.tobe.exception.AppException;
+import cleancode.studycafe.tobe.exception.InputException;
 import cleancode.studycafe.tobe.pass.seat.StudyCafeSeatPass;
 import cleancode.studycafe.tobe.pass.StudyCafePassType;
 
@@ -23,18 +23,32 @@ public class InputHandler {
         if ("3".equals(userInput)) {
             return StudyCafePassType.FIXED;
         }
-        throw new AppException("잘못된 입력입니다.");
+
+        throw new InputException("이용권 번호를 잘못 입력하셨습니다.");
     }
 
     public StudyCafeSeatPass getSelectPass(List<StudyCafeSeatPass> passes) {
         String userInput = SCANNER.nextLine();
         int selectedIndex = Integer.parseInt(userInput) - 1;
+
+        if (selectedIndex < 0 || selectedIndex >= passes.size()) {
+            throw new InputException("이용권 목록 번호를 잘못 입력하셨습니다.");
+        }
+
         return passes.get(selectedIndex);
     }
 
     public boolean getLockerSelection() {
         String userInput = SCANNER.nextLine();
-        return "1".equals(userInput);
+        if ("1".equals(userInput)) {
+            return true;
+        }
+
+        if ("2".equals(userInput)) {
+            return false;
+        }
+
+        throw new InputException("사물함 이용 번호를 잘못 입력하셨습니다.");
     }
 
 }
