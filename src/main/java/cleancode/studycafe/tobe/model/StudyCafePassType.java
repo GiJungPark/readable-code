@@ -19,4 +19,16 @@ public enum StudyCafePassType {
     boolean isLockerType() {
         return LOCKER_TYPES.contains(this);
     }
+
+    public boolean isHourlyType() {
+        return this == HOURLY;
+    }
+
+    public boolean isWeeklyType() {
+        return this == WEEKLY;
+    }
+
+    public boolean isFixedType() {
+        return this == FIXED;
+    }
 }

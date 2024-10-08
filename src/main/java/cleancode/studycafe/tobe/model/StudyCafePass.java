@@ -27,6 +27,10 @@ public class StudyCafePass {
     }
 
     public boolean doesNotFixedType() {
+        return !doesFixedType();
+    }
+
+    private boolean doesFixedType() {
         return this.passType.isLockerType();
     }
 
@@ -39,13 +43,13 @@ public class StudyCafePass {
     }
 
     public String display() {
-        if (passType == StudyCafePassType.HOURLY) {
+        if (passType.isHourlyType()) {
             return String.format("%s시간권 - %d원", duration, price);
         }
-        if (passType == StudyCafePassType.WEEKLY) {
+        if (passType.isWeeklyType()) {
             return String.format("%s주권 - %d원", duration, price);
         }
-        if (passType == StudyCafePassType.FIXED) {
+        if (passType.isFixedType()) {
             return String.format("%s주권 - %d원", duration, price);
         }
         return "";
