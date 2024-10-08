@@ -1,4 +1,4 @@
-package cleancode.studycafe.tobe.io;
+package cleancode.studycafe.tobe.io.console;
 
 import cleancode.studycafe.tobe.pass.locker.StudyCafeLockerPass;
 import cleancode.studycafe.tobe.pass.StudyCafePass;
@@ -7,7 +7,7 @@ import cleancode.studycafe.tobe.pass.StudyCafePassType;
 
 import java.util.List;
 
-public class OutputHandler {
+public class ConsoleOutputHandler {
 
     public void showWelcomeMessage() {
         System.out.println("*** 프리미엄 스터디카페 ***");

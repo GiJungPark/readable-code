@@ -1,53 +1,28 @@
 package cleancode.studycafe.tobe.io;
 
+import cleancode.studycafe.tobe.io.console.ConsoleInputHandler;
+import cleancode.studycafe.tobe.io.console.ConsoleOutputHandler;
 import cleancode.studycafe.tobe.pass.StudyCafePassType;
 import cleancode.studycafe.tobe.pass.locker.StudyCafeLockerPass;
 import cleancode.studycafe.tobe.pass.seat.StudyCafeSeatPass;
 
 import java.util.List;
 
-public class IOProvider {
-    private final InputHandler inputHandler;
-    private final OutputHandler outputHandler;
+public interface IOProvider {
 
-    public IOProvider(InputHandler inputHandler, OutputHandler outputHandler) {
-        this.inputHandler = inputHandler;
-        this.outputHandler = outputHandler;
-    }
+    void showStartMessage();
 
-    public void showStartMessage() {
-        outputHandler.showWelcomeMessage();
-        outputHandler.showAnnouncement();
-    }
+    StudyCafePassType selectPassType();
 
-    public StudyCafePassType selectPassType() {
-        outputHandler.askPassTypeSelection();
-        return inputHandler.getPassTypeSelectingUserAction();
-    }
+    StudyCafeSeatPass selectPassFrom(List<StudyCafeSeatPass> matchingPasses);
 
-    public StudyCafeSeatPass selectPassFrom(List<StudyCafeSeatPass> matchingPasses) {
-        outputHandler.showPassListForSelection(matchingPasses);
-        return inputHandler.getSelectPass(matchingPasses);
-    }
+    boolean isSelectLockerPassFrom(StudyCafeLockerPass lockerPass) ;
 
-    public boolean isSelectLockerPassFrom(StudyCafeLockerPass lockerPass) {
-        outputHandler.askLockerPass(lockerPass);
-        return inputHandler.getLockerSelection();
-    }
+    void showSeatAndLockerPassUsageDetails(StudyCafeSeatPass selectedPass, StudyCafeLockerPass lockerPass) ;
 
-    public void showSeatAndLockerPassUsageDetails(StudyCafeSeatPass selectedPass, StudyCafeLockerPass lockerPass) {
-        outputHandler.showPassUsageDetails(selectedPass, lockerPass);
-    }
+    void showSeatPassUsageDetails(StudyCafeSeatPass selectedPass) ;
 
-    public void showSeatPassUsageDetails(StudyCafeSeatPass selectedPass) {
-        outputHandler.showPassUsageDetails(selectedPass);
-    }
+    void showPassOrderSummary(int totalPrice, int discountPrice) ;
 
-    public void showPassOrderSummary(int totalPrice, int discountPrice) {
-        outputHandler.showPssOrderSummary(totalPrice, discountPrice);
-    }
-
-    public void showExceptionMessage(String message) {
-        outputHandler.showSimpleMessage(message);
-    }
+    void showExceptionMessage(String message);
 }
